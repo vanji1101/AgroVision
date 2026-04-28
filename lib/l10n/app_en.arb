@@ -1,0 +1,43 @@
+{
+  "@@locale": "en",
+  "app_name": "AgroVision",
+  "smart_farming_assistant": "Smart Farming Assistant",
+  "enter_phone_number": "Enter Phone Number",
+  "phone_hint": "10-digit mobile number",
+  "send_otp": "Send OTP",
+  "otp_verification": "OTP Verification",
+  "enter_otp_sent_to": "Enter the code sent to {phoneNumber}",
+  "@enter_otp_sent_to": {
+    "placeholders": {
+      "phoneNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "verify_otp": "Verify OTP",
+  "resend_otp": "Resend OTP",
+  "otp_resent": "OTP Resent!",
+  "please_enter_valid_phone": "Please enter a valid 10-digit number",
+  "please_enter_valid_otp": "Please enter a valid 6-digit OTP",
+  "verification_failed": "Verification Failed",
+  "invalid_phone_number": "The provided phone number is not valid.",
+  "too_many_requests": "Too many requests. Try again later.",
+  "otp_incorrect": "The OTP entered is incorrect.",
+  "otp_expired": "The OTP has expired. Please resend.",
+  "unexpected_error": "An unexpected error occurred",
+  "terms_and_conditions": "By continuing, you agree to our Terms & Conditions",
+  "select_language": "Select Language",
+  "english": "English",
+  "tamil": "Tamil",
+  "greeting": "Welcome, Farmer",
+  "today_weather": "Today's Weather",
+  "humidity": "Humidity",
+  "wind": "Wind",
+  "rain": "Rain",
+  "view_details": "View Details",
+  "farm_tools": "Farm Tools",
+  "crop_disease": "Crop Disease Detection",
+  "soil_analysis": "Soil Analysis",
+  "satellite_monitoring": "Satellite Monitoring",
+  "gov_schemes": "Government Schemes"
+}

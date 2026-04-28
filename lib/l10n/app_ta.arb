@@ -1,0 +1,43 @@
+{
+  "@@locale": "ta",
+  "app_name": "AgroVision",
+  "smart_farming_assistant": "ஸ்மார்ட் விவசாய உதவியாளர்",
+  "enter_phone_number": "அலைபேசி எண்ணை உள்ளிடவும்",
+  "phone_hint": "10 இலக்க மொபைல் எண்",
+  "send_otp": "OTP அனுப்பவும்",
+  "otp_verification": "OTP சரிபார்ப்பு",
+  "enter_otp_sent_to": "{phoneNumber} என்ற எண்ணிற்கு அனுப்பப்பட்ட குறியீட்டை உள்ளிடவும்",
+  "@enter_otp_sent_to": {
+    "placeholders": {
+      "phoneNumber": {
+        "type": "String"
+      }
+    }
+  },
+  "verify_otp": "சரிபார்க்கவும்",
+  "resend_otp": "மீண்டும் அனுப்பவும்",
+  "otp_resent": "OTP மீண்டும் அனுப்பப்பட்டது!",
+  "please_enter_valid_phone": "சரியான 10 இலக்க எண்ணை உள்ளிடவும்",
+  "please_enter_valid_otp": "சரியான 6 இலக்க OTP ஐ உள்ளிடவும்",
+  "verification_failed": "சரிபார்ப்பு தோல்வியடைந்தது",
+  "invalid_phone_number": "வழங்கப்பட்ட தொலைபேசி எண் செல்லுபடியாகாது.",
+  "too_many_requests": "அதிகப்படியான கோரிக்கைகள். சிறிது நேரம் கழித்து மீண்டும் முயற்சிக்கவும்.",
+  "otp_incorrect": "உள்ளிடப்பட்ட OTP தவறானது.",
+  "otp_expired": "OTP காலாவதியாகிவிட்டது. மீண்டும் அனுப்பவும்.",
+  "unexpected_error": "எதிர்பாராத பிழை ஏற்பட்டது",
+  "terms_and_conditions": "தொடர்வதன் மூலம், எங்கள் விதிமுறைகள் மற்றும் நிபந்தனைகளை ஒப்புக்கொள்கிறீர்கள்",
+  "select_language": "மொழியைத் தேர்ந்தெடுக்கவும்",
+  "english": "ஆங்கிலம்",
+  "tamil": "தமிழ்",
+  "greeting": "வணக்கம், விவசாயி",
+  "today_weather": "இன்றைய வானிலை",
+  "humidity": "ஈரப்பதம்",
+  "wind": "காற்று",
+  "rain": "மழை",
+  "view_details": "விவரங்களைக் காண்க",
+  "farm_tools": "பண்ணை கருவிகள்",
+  "crop_disease": "பயிர் நோய் கண்டறிதல்",
+  "soil_analysis": "மண் ஆய்வு",
+  "satellite_monitoring": "செயற்கைக்கோள் கண்காணிப்பு",
+  "gov_schemes": "அரசு திட்டங்கள்"
+}
