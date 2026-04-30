@@ -15,18 +15,18 @@ class VoiceService:
         
     def _load_whisper(self):
         if self.whisper_model is None:
-            logger.info("Loading Whisper model (base)...")
+            logger.info("Loading Whisper model (base) on GPU...")
             # Use base or tiny for faster local inference
-            self.whisper_model = whisper.load_model("base") 
+            self.whisper_model = whisper.load_model("base", device="cuda") 
             
     def _load_tts(self):
         if self.tts is None:
-            logger.info("Loading Coqui TTS model...")
+            logger.info("Loading Coqui TTS model on GPU...")
             # Use a multilingual model to support English and Tamil if possible, 
             # or a fast English model for now.
             # Example: tts_models/multilingual/multi-dataset/xtts_v2 is good but heavy.
             # Using a basic English model to ensure it runs locally smoothly.
-            self.tts = TTS("tts_models/en/ljspeech/fast_pitch")
+            self.tts = TTS("tts_models/en/ljspeech/fast_pitch", gpu=True)
 
     def transcribe_audio(self, file_path: str) -> str:
         try:

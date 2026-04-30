@@ -1,0 +1,14 @@
+{
+  "model": "gemma4:e2b",
+  "messages": [
+    {"role": "system", "content": "You are AgroVision, an AI agriculture assistant. Be brief."},
+    {"role": "user", "content": "Hello, how can you help farmers?"}
+  ],
+  "stream": false,
+  "options": {
+    "num_gpu": 99,
+    "num_ctx": 1024,
+    "num_predict": 512,
+    "think": false
+  }
+}

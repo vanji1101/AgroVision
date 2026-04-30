@@ -34,16 +34,20 @@ class WeatherService {
 
       // Only geocode if manual name is not provided
       if (manualName == null || manualName.isEmpty) {
-        try {
-          List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
-          if (placemarks.isNotEmpty) {
-            Placemark place = placemarks[0];
-            String city = place.locality ?? "";
-            String district = place.subAdministrativeArea ?? "";
-            locationName = city.isNotEmpty ? city : (district.isNotEmpty ? district : "Current Location");
+        if (!kIsWeb) {
+          try {
+            List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
+            if (placemarks.isNotEmpty) {
+              Placemark place = placemarks[0];
+              String city = place.locality ?? "";
+              String district = place.subAdministrativeArea ?? "";
+              locationName = city.isNotEmpty ? city : (district.isNotEmpty ? district : "Current Location");
+            }
+          } catch (e) {
+            debugPrint("Geocoding failed: $e");
           }
-        } catch (e) {
-          debugPrint("Geocoding failed: $e");
+        } else {
+          debugPrint("Geocoding disabled on Web, relying on OWM fallback name.");
         }
       }
       
