@@ -1,6 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import '../services/api_service.dart';
+import 'package:record/record.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 import '../theme/app_colors.dart';
 
 // ─── Chat message model ─────────────────────────────────────────────────────
@@ -26,10 +31,11 @@ class _VoiceAIScreenState extends State<VoiceAIScreen>
   final ScrollController _scrollCtrl = ScrollController();
   late AnimationController _pulse;
 
-  // Your machine's local network IP — physical device connects over WiFi
-  static const String _backendBaseUrl = 'http://10.40.169.230:8000';
-
   final List<_ChatMessage> _messages = [];
+  
+  late final AudioRecorder _recorder;
+  late final AudioPlayer _player;
+  String? _audioPath;
 
   final List<_QuickQ> _quick = const [
     _QuickQ('Weather forecast', 'வானிலை'),
@@ -44,6 +50,8 @@ class _VoiceAIScreenState extends State<VoiceAIScreen>
     _pulse = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 800))
       ..repeat(reverse: true);
+    _recorder = AudioRecorder();
+    _player = AudioPlayer();
   }
 
   @override
@@ -51,6 +59,8 @@ class _VoiceAIScreenState extends State<VoiceAIScreen>
     _pulse.dispose();
     _ctrl.dispose();
     _scrollCtrl.dispose();
+    _recorder.dispose();
+    _player.dispose();
     super.dispose();
   }
 
@@ -68,31 +78,13 @@ class _VoiceAIScreenState extends State<VoiceAIScreen>
     _scrollToBottom();
 
     try {
-      final response = await http
-          .post(
-            Uri.parse('$_backendBaseUrl/chat'),
-            headers: {'Content-Type': 'application/json'},
-            body: jsonEncode({
-              'message': trimmed,
-              'language': 'en',
-            }),
-          )
-          .timeout(const Duration(seconds: 30));
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final reply = data['response'] as String? ?? 'No response received.';
-        setState(() {
-          _messages.add(_ChatMessage(
-              text: reply, isUser: false, timestamp: DateTime.now()));
-        });
-      } else {
-        _addErrorMessage(
-            'Server error (${response.statusCode}). Please try again.');
-      }
+      final reply = await ApiService.postChat(trimmed);
+      setState(() {
+        _messages.add(_ChatMessage(
+            text: reply, isUser: false, timestamp: DateTime.now()));
+      });
     } catch (e) {
-      _addErrorMessage(
-          'Could not connect to AgroVision AI. Make sure the backend server is running.');
+      _addErrorMessage(e.toString().replaceAll('Exception: ', ''));
     } finally {
       setState(() => _isSending = false);
       _scrollToBottom();
@@ -104,6 +96,79 @@ class _VoiceAIScreenState extends State<VoiceAIScreen>
       _messages.add(_ChatMessage(
           text: msg, isUser: false, timestamp: DateTime.now()));
     });
+  }
+
+  // ─── Voice Recording Logic ────────────────────────────────────────────────
+  Future<void> _toggleListening() async {
+    if (_listening) {
+      await _stopRecording();
+    } else {
+      await _startRecording();
+    }
+  }
+
+  Future<void> _startRecording() async {
+    try {
+      if (await _recorder.hasPermission()) {
+        final dir = await getTemporaryDirectory();
+        final path = p.join(dir.path, 'audio_${DateTime.now().millisecondsSinceEpoch}.wav');
+        
+        await _recorder.start(const RecordConfig(encoder: AudioEncoder.wav), path: path);
+        setState(() {
+          _listening = true;
+          _audioPath = path;
+        });
+      } else {
+        _addErrorMessage('Microphone permission denied.');
+      }
+    } catch (e) {
+      _addErrorMessage('Could not start recording: $e');
+    }
+  }
+
+  Future<void> _stopRecording() async {
+    try {
+      final path = await _recorder.stop();
+      setState(() {
+        _listening = false;
+        _isSending = true;
+      });
+
+      if (path != null) {
+        await _sendVoiceMessage(path);
+      }
+    } catch (e) {
+      _addErrorMessage('Error stopping recording: $e');
+      setState(() => _isSending = false);
+    }
+  }
+
+  Future<void> _sendVoiceMessage(String path) async {
+    try {
+      final result = await ApiService.postVoice(path);
+
+      final transcribed = result['transcribed'] as String;
+      final replyText = result['replyText'] as String;
+      final audioBytes = result['audioBytes'] as List<int>;
+
+      setState(() {
+        _messages.add(_ChatMessage(text: transcribed, isUser: true, timestamp: DateTime.now()));
+        _messages.add(_ChatMessage(text: replyText, isUser: false, timestamp: DateTime.now()));
+      });
+
+      // Play the returned audio
+      final dir = await getTemporaryDirectory();
+      final responseAudioPath = p.join(dir.path, 'response_${DateTime.now().millisecondsSinceEpoch}.wav');
+      final file = File(responseAudioPath);
+      await file.writeAsBytes(audioBytes);
+      
+      await _player.play(DeviceFileSource(responseAudioPath));
+    } catch (e) {
+      _addErrorMessage(e.toString().replaceAll('Exception: ', ''));
+    } finally {
+      setState(() => _isSending = false);
+      _scrollToBottom();
+    }
   }
 
   void _scrollToBottom() {
@@ -415,7 +480,7 @@ class _VoiceAIScreenState extends State<VoiceAIScreen>
         Row(children: [
           // Mic button
           GestureDetector(
-            onTap: () => setState(() => _listening = !_listening),
+            onTap: _toggleListening,
             child: Container(
               width: 48,
               height: 48,
