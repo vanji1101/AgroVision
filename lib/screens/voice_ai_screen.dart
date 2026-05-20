@@ -110,8 +110,17 @@ class _VoiceAIScreenState extends State<VoiceAIScreen>
   Future<void> _startRecording() async {
     try {
       if (await _recorder.hasPermission()) {
-        final dir = await getTemporaryDirectory();
-        final path = p.join(dir.path, 'audio_${DateTime.now().millisecondsSinceEpoch}.wav');
+        String path = '';
+        try {
+          final dir = await getTemporaryDirectory();
+          if (!await dir.exists()) {
+            await dir.create(recursive: true);
+          }
+          path = p.join(dir.path, 'audio_${DateTime.now().millisecondsSinceEpoch}.wav');
+        } catch (e) {
+          _addErrorMessage('Local storage is not supported on this device. (Are you running on Web?)');
+          return;
+        }
         
         await _recorder.start(const RecordConfig(encoder: AudioEncoder.wav), path: path);
         setState(() {
@@ -157,12 +166,19 @@ class _VoiceAIScreenState extends State<VoiceAIScreen>
       });
 
       // Play the returned audio
-      final dir = await getTemporaryDirectory();
-      final responseAudioPath = p.join(dir.path, 'response_${DateTime.now().millisecondsSinceEpoch}.wav');
-      final file = File(responseAudioPath);
-      await file.writeAsBytes(audioBytes);
-      
-      await _player.play(DeviceFileSource(responseAudioPath));
+      try {
+        final dir = await getTemporaryDirectory();
+        if (!await dir.exists()) {
+          await dir.create(recursive: true);
+        }
+        final responseAudioPath = p.join(dir.path, 'response_${DateTime.now().millisecondsSinceEpoch}.wav');
+        final file = File(responseAudioPath);
+        await file.writeAsBytes(audioBytes);
+        
+        await _player.play(DeviceFileSource(responseAudioPath));
+      } catch (e) {
+        _addErrorMessage('Could not play audio response (Local storage not supported).');
+      }
     } catch (e) {
       _addErrorMessage(e.toString().replaceAll('Exception: ', ''));
     } finally {

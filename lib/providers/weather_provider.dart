@@ -26,7 +26,10 @@ class WeatherProvider with ChangeNotifier {
   final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
   WeatherProvider() {
-    _initNotifications();
+    // Defer heavy initialization to prevent blocking the main thread during provider creation
+    Future.delayed(Duration.zero, () {
+      _initNotifications();
+    });
   }
 
   void setSelectedCrop(String crop) {

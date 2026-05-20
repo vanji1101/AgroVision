@@ -1,7 +1,16 @@
+# ── Web framework ─────────────────────────────────────────────────────────
 fastapi==0.111.0
 uvicorn==0.30.1
 pydantic==2.7.4
 requests==2.32.3
-python-multipart==0.0.9
+python-multipart==0.0.9   # Required for UploadFile / multipart form support
+
+# ── Voice / TTS (existing) ────────────────────────────────────────────────
 #openai-whisper==20231117
 TTS==0.22.0
+
+# ── Crop Disease Detection – ML & image processing ────────────────────────
+tensorflow==2.16.1        # Keras model loading and inference
+Pillow==10.3.0            # Image decode, resize, convert (used in preprocessing)
+numpy==1.26.4             # Array operations (model input/output)
+opencv-python==4.9.0.80   # Optional: additional image utilities (CV2)

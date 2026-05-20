@@ -8,7 +8,10 @@ class LanguageProvider extends ChangeNotifier {
   Locale get currentLocale => _currentLocale;
 
   LanguageProvider() {
-    _loadLanguage();
+    // Run asynchronously to prevent main thread blocking during app startup
+    Future.delayed(Duration.zero, () {
+      _loadLanguage();
+    });
   }
 
   Future<void> _loadLanguage() async {

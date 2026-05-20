@@ -24,8 +24,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      context.read<WeatherProvider>().refreshWeather();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<WeatherProvider>().refreshWeather();
+      }
     });
   }
 

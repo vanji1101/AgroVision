@@ -17,6 +17,7 @@ import 'screens/main_scaffold.dart';
 import 'providers/language_provider.dart';
 import 'providers/user_provider.dart';
 import 'providers/weather_provider.dart';
+import 'screens/voice_assistant_screen.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {

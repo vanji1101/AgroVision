@@ -50,23 +50,41 @@ class _OTPScreenState extends State<OTPScreen> {
         
         UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
         
-        if (mounted) Navigator.pop(context);
-
         final user = userCredential.user;
         if (user != null) {
-          final userDoc = await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
+          try {
+            final userDoc = await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .get();
 
-          if (mounted) {
-            if (userDoc.exists) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const MainScaffold()),
-                (route) => false,
+            if (mounted) {
+              Navigator.pop(context); // Close loading dialog
+              if (userDoc.exists) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const MainScaffold()),
+                  (route) => false,
+                );
+              } else {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfileSetupScreen()),
+                  (route) => false,
+                );
+              }
+            }
+          } on FirebaseException catch (e) {
+            if (mounted) {
+              Navigator.pop(context); // Close loading dialog
+              String errorMessage = 'Failed to access profile.';
+              if (e.code == 'permission-denied') {
+                errorMessage = 'Permission denied. You may need to set up your profile.';
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(errorMessage), backgroundColor: Colors.orange),
               );
-            } else {
+              // Fallback to ProfileSetupScreen so they can try to set their profile
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (_) => const ProfileSetupScreen()),
@@ -74,10 +92,12 @@ class _OTPScreenState extends State<OTPScreen> {
               );
             }
           }
+        } else {
+          if (mounted) Navigator.pop(context);
         }
       } on FirebaseAuthException catch (e) {
         if (mounted) {
-          Navigator.pop(context);
+          Navigator.pop(context); // Close loading dialog
           String message = l10n.verification_failed;
           if (e.code == 'invalid-verification-code') {
             message = l10n.otp_incorrect;
@@ -90,7 +110,7 @@ class _OTPScreenState extends State<OTPScreen> {
         }
       } catch (e) {
         if (mounted) {
-          Navigator.pop(context);
+          Navigator.pop(context); // Close loading dialog
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('${l10n.unexpected_error}: ${e.toString()}'), backgroundColor: Colors.red),
           );

@@ -230,11 +230,22 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         );
                       }
                     }
+                  } on FirebaseException catch (e) {
+                    if (mounted) {
+                      Navigator.pop(context); // Close loading
+                      String errorMessage = 'Error saving profile.';
+                      if (e.code == 'permission-denied') {
+                        errorMessage = 'Permission denied. Make sure you are signed in.';
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+                      );
+                    }
                   } catch (e) {
                     if (mounted) {
                       Navigator.pop(context); // Close loading
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error saving profile: $e')),
+                        SnackBar(content: Text('Unexpected error: $e'), backgroundColor: Colors.red),
                       );
                     }
                   }
