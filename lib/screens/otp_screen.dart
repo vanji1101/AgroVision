@@ -50,8 +50,6 @@ class _OTPScreenState extends State<OTPScreen> {
         
         UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
         
-        if (mounted) Navigator.pop(context);
-
         final user = userCredential.user;
         if (user != null) {
           final userDoc = await FirebaseFirestore.instance
@@ -60,6 +58,8 @@ class _OTPScreenState extends State<OTPScreen> {
               .get();
 
           if (mounted) {
+            Navigator.pop(context); // Dismiss loading dialog
+            
             if (userDoc.exists) {
               Navigator.pushAndRemoveUntil(
                 context,

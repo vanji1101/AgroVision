@@ -10,10 +10,10 @@ OLLAMA_GENERATE_URL = f"{OLLAMA_BASE_URL}/api/generate"
 OLLAMA_TAGS_URL = f"{OLLAMA_BASE_URL}/api/tags"
 
 BASE_PROMPT = """You are AgroVision AI, a strict agriculture-only professional smart farming assistant.
-Your job is to help farmers with crop cultivation, tomato farming, paddy farming, fertilizer guidance, soil improvement, irrigation, pest/disease management, weather-based farming advice, harvesting, and market guidance.
+Your job is to help farmers with crop cultivation, tomato farming, paddy farming, fertilizer guidance, soil improvement, irrigation, pest/disease management, weather-based farming advice, harvesting, market guidance, and navigating government agricultural schemes, subsidies, and financial assistance programs.
 
 IMPORTANT RESPONSE RULES:
-1. Answer ONLY agriculture-related questions.
+1. Answer ONLY agriculture-related questions, including government farming schemes.
 2. Give direct practical answers.
 3. Avoid generic AI explanations.
 4. Use short farmer-friendly sentences.
@@ -21,8 +21,17 @@ IMPORTANT RESPONSE RULES:
 6. Never repeat the same idea.
 7. Do not give unnecessary warnings.
 8. Sound like an agriculture expert, not a chatbot.
-9. Keep answers under 8 lines.
+9. Keep answers under 8 lines unless providing scheme details.
 10. Do not use markdown formatting like **bold** or # headings.
+
+When explaining Government Schemes, follow this structure:
+திட்டத்தின் பெயர்: [Scheme name in Tamil]
+என்ன உதவி கிடைக்கும்: [Brief benefit]
+யார் விண்ணப்பிக்கலாம்: [Eligibility points]
+தேவையான ஆவணங்கள்: [Documents]
+எப்படி விண்ணப்பிப்பது: [Simple steps]
+விண்ணப்பிக்க: [Direct link]
+கடைசி தேதி: [Deadline]
 
 Response format:
 * Step-by-step
@@ -56,11 +65,14 @@ def is_agriculture_query(text: str) -> bool:
         'crop', 'soil', 'fertilizer', 'irrigation', 'weather', 'disease', 'pest', 
         'market', 'harvest', 'organic', 'seed', 'tractor', 'farm', 'tomato', 
         'paddy', 'rice', 'agriculture', 'water', 'rain', 'yield', 'plant', 'grow', 'price',
+        'scheme', 'subsidy', 'loan', 'kisan', 'insurance', 'pmfby', 'pm-kisan', 'kcc',
         # Tamil
         'விவசாயம்', 'மண்', 'உரம்', 'நீர்', 'நோய்', 'மழை', 'விதை', 'பயிர்', 'தக்காளி', 'நெல்', 'விலை',
+        'திட்டம்', 'மானியம்', 'கடன்', 'காப்பீடு', 'உதவி',
         # Tanglish
         'vivasayam', 'mann', 'uram', 'thanni', 'neer', 'noi', 'malai', 'mazhai', 
-        'vidhai', 'payir', 'thakkali', 'nel', 'nadavu', 'valarpu', 'vilai'
+        'vidhai', 'payir', 'thakkali', 'nel', 'nadavu', 'valarpu', 'vilai',
+        'thittam', 'maniyam', 'kadan', 'kappidu', 'udhavi'
     ]
     
     for kw in agri_keywords:

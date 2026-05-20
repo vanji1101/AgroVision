@@ -96,13 +96,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           const SizedBox(height: 24),
                           
                           if (weather.alert.isNotEmpty) _buildAlertBanner(weather.alert),
+                          
 
-                          _buildCropAwarenessSection(weatherProvider),
-                          const SizedBox(height: 24),
-                          
-                          if (weatherProvider.diseaseRisks.isNotEmpty) _buildDiseaseRiskSection(weatherProvider),
-                          if (weatherProvider.diseaseRisks.isNotEmpty) const SizedBox(height: 24),
-                          
+
                           _buildHourlyForecast(weather.hourly),
                           const SizedBox(height: 24),
                           
@@ -290,116 +286,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
           Expanded(
             child: Text(alert, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCropAwarenessSection(WeatherProvider provider) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
-      ),
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('🌾 Crop Awareness', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryGreen.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: DropdownButton<String>(
-                  value: provider.selectedCrop,
-                  underline: const SizedBox(),
-                  icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.primaryGreen),
-                  items: [
-                    'நெல்', 'ராகி', 'கம்பு', 'சோளம்', 'உளுந்து', 
-                    'கரும்பு', 'பருத்தி', 'நிலக்கடலை', 
-                    'வாழை', 'மா', 'தக்காளி', 'வெங்காயம்', 
-                    'தென்னை', 'முந்திரி', 'தேக்கு', 'சவுக்கு', 'கால்நடைகள்'
-                  ].map((String crop) {
-                    return DropdownMenuItem<String>(
-                      value: crop,
-                      child: Text(crop, style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.primaryGreen)),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    if (value != null) provider.setSelectedCrop(value);
-                  },
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.background,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.info_outline, color: AppColors.primaryGreen, size: 20),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    provider.getCropAdvice(),
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDiseaseRiskSection(WeatherProvider provider) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.red.shade100, width: 1.5),
-        boxShadow: [BoxShadow(color: Colors.red.withOpacity(0.05), blurRadius: 10)],
-      ),
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: const [
-              Icon(Icons.biotech, color: Colors.red, size: 22),
-              SizedBox(width: 8),
-              Text('Disease Risk Alert', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.red)),
-            ],
-          ),
-          const SizedBox(height: 12),
-          ...provider.diseaseRisks.map((risk) => Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('⚠️', style: TextStyle(fontSize: 16)),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    risk,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-                  ),
-                ),
-              ],
-            ),
-          )),
         ],
       ),
     );
