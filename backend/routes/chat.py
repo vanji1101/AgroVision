@@ -25,7 +25,7 @@ async def chat_endpoint(request: ChatRequest):
         response_text = chatbot_service.generate_response(
             prompt=request.message,
             context=combined_context,
-            language=request.language
+            language=request.language or "en"
         )
         
         return ChatResponse(

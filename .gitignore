@@ -46,6 +46,32 @@ app.*.map.json
 
 backend/venv/
 venv/
+.venv/
 __pycache__/
 *.pyc
 .env
+
+AgroVision/
+backend/venv/
+venv/
+node_modules/
+build/
+
+# Python / backend
+backend/venv/
+venv/
+__pycache__/
+*.pyc
+
+# Flutter / generated
+build/
+.dart_tool/
+
+# Large ML files and datasets
+backend/dataset/
+backend/models/
+backend/uploads/
+backend/scratch/
+
+# Node
+node_modules/

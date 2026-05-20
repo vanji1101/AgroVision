@@ -1,7 +1,5 @@
 import os
 import tempfile
-import whisper
-from TTS.api import TTS
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -16,12 +14,14 @@ class VoiceService:
     def _load_whisper(self):
         if self.whisper_model is None:
             logger.info("Loading Whisper model (base) on GPU...")
+            import whisper
             # Use base or tiny for faster local inference
             self.whisper_model = whisper.load_model("base", device="cuda") 
             
     def _load_tts(self):
         if self.tts is None:
             logger.info("Loading Coqui TTS model on GPU...")
+            from TTS.api import TTS
             # Use a multilingual model to support English and Tamil if possible, 
             # or a fast English model for now.
             # Example: tts_models/multilingual/multi-dataset/xtts_v2 is good but heavy.
@@ -31,6 +31,8 @@ class VoiceService:
     def transcribe_audio(self, file_path: str) -> str:
         try:
             self._load_whisper()
+            if self.whisper_model is None:
+                raise RuntimeError("Whisper model failed to load")
             logger.info(f"Transcribing audio file: {file_path}")
             result = self.whisper_model.transcribe(file_path)
             text = result["text"].strip()
@@ -43,6 +45,8 @@ class VoiceService:
     def synthesize_speech(self, text: str, filename: str = "response.wav") -> str:
         try:
             self._load_tts()
+            if self.tts is None:
+                raise RuntimeError("TTS model failed to load")
             output_path = os.path.join(self.audio_output_dir, filename)
             logger.info(f"Synthesizing speech to {output_path}")
             self.tts.tts_to_file(text=text, file_path=output_path)

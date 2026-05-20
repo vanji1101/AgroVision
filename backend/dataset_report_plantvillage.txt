@@ -1,0 +1,28 @@
+Dataset Verification Report: PlantVillage
+========================================
+Path: D:\Project Niral\AgroVision\backend\dataset\raw\PlantVillage
+
+
+Summary:
+--------------------
+Total Classes: 16
+Total Images: 20638
+Total Corrupted: 0
+
+Class-wise Stats:
+- Pepper__bell___Bacterial_spot: 997 images (0 corrupted)
+- Pepper__bell___healthy: 1478 images (0 corrupted)
+- PlantVillage: 0 images (0 corrupted)
+- Potato___Early_blight: 1000 images (0 corrupted)
+- Potato___Late_blight: 1000 images (0 corrupted)
+- Potato___healthy: 152 images (0 corrupted)
+- Tomato_Bacterial_spot: 2127 images (0 corrupted)
+- Tomato_Early_blight: 1000 images (0 corrupted)
+- Tomato_Late_blight: 1909 images (0 corrupted)
+- Tomato_Leaf_Mold: 952 images (0 corrupted)
+- Tomato_Septoria_leaf_spot: 1771 images (0 corrupted)
+- Tomato_Spider_mites_Two_spotted_spider_mite: 1676 images (0 corrupted)
+- Tomato__Target_Spot: 1404 images (0 corrupted)
+- Tomato__Tomato_YellowLeaf__Curl_Virus: 3208 images (0 corrupted)
+- Tomato__Tomato_mosaic_virus: 373 images (0 corrupted)
+- Tomato_healthy: 1591 images (0 corrupted)

@@ -52,14 +52,13 @@ class _OTPScreenState extends State<OTPScreen> {
         
         final user = userCredential.user;
         if (user != null) {
-          final userDoc = await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .get();
+          try {
+            final userDoc = await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .get();
 
           if (mounted) {
-            Navigator.pop(context); // Dismiss loading dialog
-            
             if (userDoc.exists) {
               Navigator.pushAndRemoveUntil(
                 context,
@@ -77,7 +76,7 @@ class _OTPScreenState extends State<OTPScreen> {
         }
       } on FirebaseAuthException catch (e) {
         if (mounted) {
-          Navigator.pop(context);
+          Navigator.pop(context); // Close loading dialog
           String message = l10n.verification_failed;
           if (e.code == 'invalid-verification-code') {
             message = l10n.otp_incorrect;
@@ -90,7 +89,7 @@ class _OTPScreenState extends State<OTPScreen> {
         }
       } catch (e) {
         if (mounted) {
-          Navigator.pop(context);
+          Navigator.pop(context); // Close loading dialog
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('${l10n.unexpected_error}: ${e.toString()}'), backgroundColor: Colors.red),
           );

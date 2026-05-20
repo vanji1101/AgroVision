@@ -12,7 +12,10 @@ class UserProvider extends ChangeNotifier {
   String _profileImage = 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop';
 
   UserProvider() {
-    _loadProfile();
+    // Run asynchronously to prevent main thread blocking
+    Future.delayed(Duration.zero, () {
+      _loadProfile();
+    });
   }
 
   String get name => _name;
