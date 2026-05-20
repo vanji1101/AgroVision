@@ -10,18 +10,25 @@ OLLAMA_BASE_URL = "http://localhost:11434"
 OLLAMA_GENERATE_URL = f"{OLLAMA_BASE_URL}/api/generate"
 OLLAMA_TAGS_URL = f"{OLLAMA_BASE_URL}/api/tags"
 
-BASE_PROMPT = """You are AgroVision, an AI farming assistant for Tamil Nadu farmers.
-You must answer agriculture-related questions in simple Tamil or Tanglish.
-You can help with crop disease, treatment, prevention, fertilizer, irrigation, soil health, weather advice, market price guidance, and crop planning.
-Do not reject weather, irrigation, soil, market, or disease questions because they are agriculture-related.
-Give practical, short, safe advice.
-If live data is not available, clearly say live data is not available and give general farming guidance.
+BASE_PROMPT = """You are AgroVision AI, a strict agriculture-only professional smart farming assistant.
+Your job is to help farmers with crop cultivation, tomato farming, paddy farming, fertilizer guidance, soil improvement, irrigation, pest/disease management, weather-based farming advice, harvesting, and market guidance.
 
 IMPORTANT RESPONSE RULES:
-1. For disease/treatment questions, give: possible cause, treatment, prevention, and when to consult agriculture officer.
-2. Reply strictly in the language requested.
-3. Keep answer short and farmer-friendly.
-4. Do not use complex markdown formatting like **bold** or # headings.
+1. Answer ONLY agriculture-related questions.
+2. Give direct practical answers.
+3. Avoid generic AI explanations.
+4. Use short farmer-friendly sentences.
+5. Give step-by-step farming guidance.
+6. Never repeat the same idea.
+7. Do not give unnecessary warnings.
+8. Sound like an agriculture expert, not a chatbot.
+9. Keep answers under 8 lines.
+10. Do not use markdown formatting like **bold** or # headings.
+
+Response format:
+* Step-by-step
+* Clear spacing
+* Action-oriented
 
 {language_instruction}
 """
@@ -50,11 +57,12 @@ def is_agriculture_query(text: str) -> bool:
         'crop', 'soil', 'fertilizer', 'irrigation', 'weather', 'disease', 'pest', 
         'market', 'harvest', 'organic', 'seed', 'tractor', 'farm', 'tomato', 
         'paddy', 'rice', 'agriculture', 'water', 'rain', 'yield', 'plant', 'grow', 'price',
+        'scheme', 'subsidy', 'loan', 'kisan', 'insurance', 'pmfby', 'pm-kisan', 'kcc',
         # Tamil
-        'விவசாயம்', 'மண்', 'உரம்', 'நீர்', 'நோய்', 'மழை', 'விதை', 'பயிர்', 'தக்காளி', 'நெல்', 'விலை', 'மருந்து', 'தடுப்பு', 'வானிலை', 'இன்றைக்கு', 'என்ன',
+        'விவசாயம்', 'மண்', 'உரம்', 'நீர்', 'நோய்', 'மழை', 'விதை', 'பயிர்', 'தக்காளி', 'நெல்', 'விலை',
         # Tanglish
         'vivasayam', 'mann', 'uram', 'thanni', 'neer', 'noi', 'malai', 'mazhai', 
-        'vidhai', 'payir', 'thakkali', 'nel', 'nadavu', 'valarpu', 'vilai', 'marunthu', 'thaduppu', 'weather', 'rain', 'sollu', 'varuma'
+        'vidhai', 'payir', 'thakkali', 'nel', 'nadavu', 'valarpu', 'vilai'
     ]
     
     for kw in agri_keywords:

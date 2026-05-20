@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
-import '../providers/language_provider.dart';
 import 'home_screen.dart';
 import 'market_screen.dart';
 import 'voice_ai_screen.dart';
@@ -28,28 +26,37 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final lp = Provider.of<LanguageProvider>(context);
-    
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _pages),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        height: 70,
+        width: 70,
+        margin: const EdgeInsets.only(top: 20),
+        child: FloatingActionButton(
+          onPressed: () => setState(() => _currentIndex = 2),
+          backgroundColor: AppColors.primaryGreen,
+          shape: const CircleBorder(),
+          elevation: 4,
+          child: const Icon(Icons.chat_bubble_outline, color: Colors.white, size: 30),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8,
+        color: Colors.white,
         elevation: 10,
-        selectedItemColor: AppColors.primaryGreen,
-        unselectedItemColor: Colors.grey[400],
-        selectedLabelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
-        unselectedLabelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home_outlined),
-            label: lp.translate('home'),
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.shopping_cart_outlined),
-            label: lp.translate('market'),
+        child: SizedBox(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildNavItem(0, Icons.home_outlined, lp.translate('home')),
+              _buildNavItem(1, Icons.shopping_cart_outlined, lp.translate('market')),
+              const SizedBox(width: 40), // Space for FAB
+              _buildNavItem(3, Icons.inventory_2_outlined, lp.translate('seeds')),
+              _buildNavItem(4, Icons.person_outline, lp.translate('profile')),
+            ],
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.chat_bubble_outline),

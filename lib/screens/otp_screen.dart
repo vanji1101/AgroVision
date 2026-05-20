@@ -58,33 +58,14 @@ class _OTPScreenState extends State<OTPScreen> {
                 .doc(user.uid)
                 .get();
 
-            if (mounted) {
-              Navigator.pop(context); // Close loading dialog
-              if (userDoc.exists) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => const MainScaffold()),
-                  (route) => false,
-                );
-              } else {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ProfileSetupScreen()),
-                  (route) => false,
-                );
-              }
-            }
-          } on FirebaseException catch (e) {
-            if (mounted) {
-              Navigator.pop(context); // Close loading dialog
-              String errorMessage = 'Failed to access profile.';
-              if (e.code == 'permission-denied') {
-                errorMessage = 'Permission denied. You may need to set up your profile.';
-              }
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(errorMessage), backgroundColor: Colors.orange),
+          if (mounted) {
+            if (userDoc.exists) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const MainScaffold()),
+                (route) => false,
               );
-              // Fallback to ProfileSetupScreen so they can try to set their profile
+            } else {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (_) => const ProfileSetupScreen()),
@@ -92,8 +73,6 @@ class _OTPScreenState extends State<OTPScreen> {
               );
             }
           }
-        } else {
-          if (mounted) Navigator.pop(context);
         }
       } on FirebaseAuthException catch (e) {
         if (mounted) {

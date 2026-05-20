@@ -53,9 +53,6 @@ dependencies:
   audioplayers: ^6.6.0
   path_provider: ^2.1.5
   path: ^1.9.1
-  speech_to_text: ^7.0.0
-  flutter_tts: ^4.0.2
-  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:
